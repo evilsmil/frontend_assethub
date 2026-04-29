@@ -6,7 +6,17 @@ import { Footer } from './components/Footer'
 import { Navigation } from './components/Navigation'
 import { Toast } from './components/Toast'
 import { useAssets } from './hooks/useAssets'
-import { createAsset, createOffer, createSellerSubmission, deleteAsset, updateAsset } from './lib/api'
+import {
+  createAsset,
+  createOffer,
+  createSellerSubmission,
+  deleteAsset,
+  getStoredOffers,
+  getStoredSellerSubmissions,
+  updateAsset,
+  usesLocalStorage,
+} from './lib/api'
+import type { Offer, SellerSubmission } from './lib/api'
 import { AboutPage } from './pages/AboutPage'
 import { AdminPage } from './pages/AdminPage'
 import { CatalogPage } from './pages/CatalogPage'
@@ -39,6 +49,10 @@ function App() {
   const [offerAmount, setOfferAmount] = useState('')
   const [offerSent, setOfferSent] = useState(false)
   const [audience, setAudience] = useState<Audience>('seller')
+  const [storedOffers, setStoredOffers] = useState<Offer[]>(() => getStoredOffers())
+  const [storedSellerSubmissions, setStoredSellerSubmissions] = useState<SellerSubmission[]>(() =>
+    getStoredSellerSubmissions(),
+  )
   const toastTimer = useRef<number | null>(null)
   const {
     assets,
@@ -62,8 +76,23 @@ function App() {
   }, [])
 
   useEffect(() => {
-    if (assetsError) notify(`Connexion API impossible : ${assetsError}`)
+    if (!usesLocalStorage && assetsError) notify(`Connexion API impossible : ${assetsError}`)
   }, [assetsError])
+
+  useEffect(() => {
+    if (!usesLocalStorage) return
+
+    function refreshStoredRecords() {
+      setStoredOffers(getStoredOffers())
+      setStoredSellerSubmissions(getStoredSellerSubmissions())
+    }
+
+    window.addEventListener('storage', refreshStoredRecords)
+
+    return () => {
+      window.removeEventListener('storage', refreshStoredRecords)
+    }
+  }, [])
 
   const filteredAssets = useMemo(() => {
     const search = query.trim().toLowerCase()
@@ -171,9 +200,12 @@ function App() {
     }
 
     createSellerSubmission(payload)
-      .then(() => {
+      .then((submission) => {
+        if (usesLocalStorage) {
+          setStoredSellerSubmissions((current) => [submission, ...current])
+        }
         setSellerSubmitted(true)
-        notify('Votre actif a été enregistré côté serveur.')
+        notify(usesLocalStorage ? 'Votre actif a été enregistré dans ce navigateur.' : 'Votre actif a été enregistré côté serveur.')
       })
       .catch((err: unknown) => {
         notify(`Soumission impossible : ${err instanceof Error ? err.message : 'erreur inconnue'}`)
@@ -200,9 +232,12 @@ function App() {
     }
 
     createOffer(payload)
-      .then(() => {
+      .then((offer) => {
+        if (usesLocalStorage) {
+          setStoredOffers((current) => [offer, ...current])
+        }
         setOfferSent(true)
-        notify('Offre envoyée au serveur. Un agent vous recontacte sous 2h.')
+        notify(usesLocalStorage ? 'Offre enregistrée dans ce navigateur.' : 'Offre envoyée au serveur. Un agent vous recontacte sous 2h.')
       })
       .catch((err: unknown) => {
         notify(`Envoi de l’offre impossible : ${err instanceof Error ? err.message : 'erreur inconnue'}`)
@@ -217,7 +252,11 @@ function App() {
 
       upsertAsset(savedAsset)
       setSelectedAsset((current) => (current?.id === savedAsset.id ? savedAsset : current))
-      notify(assetId ? 'Actif mis à jour dans le catalogue.' : 'Actif ajouté au catalogue.')
+      if (usesLocalStorage) {
+        notify(assetId ? 'Actif mis à jour dans le catalogue local.' : 'Actif ajouté au catalogue local.')
+      } else {
+        notify(assetId ? 'Actif mis à jour dans le catalogue.' : 'Actif ajouté au catalogue.')
+      }
     } catch (err: unknown) {
       notify(`Enregistrement impossible : ${err instanceof Error ? err.message : 'erreur inconnue'}`)
       throw err
@@ -229,7 +268,7 @@ function App() {
       await deleteAsset(assetId)
       removeAsset(assetId)
       setSelectedAsset((current) => (current?.id === assetId ? null : current))
-      notify('Actif supprimé du catalogue.')
+      notify(usesLocalStorage ? 'Actif supprimé du catalogue local.' : 'Actif supprimé du catalogue.')
     } catch (err: unknown) {
       notify(`Suppression impossible : ${err instanceof Error ? err.message : 'erreur inconnue'}`)
       throw err
@@ -288,10 +327,13 @@ function App() {
       return (
         <AdminPage
           assets={assets}
+          offline={usesLocalStorage}
           loading={assetsLoading}
+          offers={storedOffers}
           onAssetDelete={removeCatalogAsset}
           onAssetOpen={openAsset}
           onAssetSave={saveCatalogAsset}
+          sellerSubmissions={storedSellerSubmissions}
         />
       )
     }

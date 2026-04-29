@@ -1,16 +1,20 @@
-import { Eye, Image, Pencil, Plus, Save, Search, ShieldCheck, Trash2, X } from 'lucide-react'
+import { ClipboardList, Eye, Image, Mail, Pencil, Phone, Plus, Save, Search, ShieldCheck, Trash2, UserRound, X } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import type { FormEvent } from 'react'
 import { sectorFilters } from '../data/marketplace'
+import type { Offer, SellerSubmission } from '../lib/api'
 import type { Asset, AssetPayload } from '../types/marketplace'
 import { formatCurrency } from '../utils/currency'
 
 type AdminPageProps = {
   assets: Asset[]
   loading: boolean
+  offline: boolean
+  offers: Offer[]
   onAssetDelete: (assetId: number) => Promise<void>
   onAssetOpen: (asset: Asset) => void
   onAssetSave: (payload: AssetPayload, assetId?: number) => Promise<void>
+  sellerSubmissions: SellerSubmission[]
 }
 
 const conditionOptions: Asset['condition'][] = [
@@ -44,12 +48,25 @@ function getAssetPayload(data: FormData): AssetPayload {
   }
 }
 
+function formatRecordDate(value: string) {
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return value
+
+  return new Intl.DateTimeFormat('fr-CM', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  }).format(date)
+}
+
 export function AdminPage({
   assets,
   loading,
+  offline,
+  offers,
   onAssetDelete,
   onAssetOpen,
   onAssetSave,
+  sellerSubmissions,
 }: AdminPageProps) {
   const [editingAsset, setEditingAsset] = useState<Asset | null>(null)
   const [query, setQuery] = useState('')
@@ -67,6 +84,11 @@ export function AdminPage({
         .includes(search),
     )
   }, [assets, query])
+
+  const assetNames = useMemo(
+    () => new Map(assets.map((asset) => [asset.id, asset.name])),
+    [assets],
+  )
 
   async function submitAsset(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -109,6 +131,8 @@ export function AdminPage({
           <span>{assets.length} actifs</span>
           <span>{assets.filter((asset) => asset.certified).length} vérifiés</span>
           <span>{assets.filter((asset) => asset.urgent).length} urgents</span>
+          {offline ? <span>{sellerSubmissions.length} soumissions locales</span> : null}
+          {offline ? <span>{offers.length} offres locales</span> : null}
         </div>
       </div>
 
@@ -313,6 +337,78 @@ export function AdminPage({
               ))
             )}
           </div>
+
+          {offline ? (
+            <div className="local-records-panel">
+              <div className="admin-list-head compact-head">
+                <div>
+                  <span className="section-kicker">Stockage local</span>
+                  <h3>Formulaires reçus</h3>
+                </div>
+                <ClipboardList size={20} />
+              </div>
+
+              <div className="local-record-grid">
+                <section className="local-record-section">
+                  <div className="local-record-title">
+                    <UserRound size={16} />
+                    Vendeurs
+                  </div>
+                  <div className="local-record-list">
+                    {sellerSubmissions.length === 0 ? (
+                      <div className="local-record-empty">Aucune soumission vendeur</div>
+                    ) : (
+                      sellerSubmissions.map((submission) => (
+                        <article className="local-record-card" key={submission.id}>
+                          <div>
+                            <strong>{submission.assetName}</strong>
+                            <span>{submission.fullName} · {submission.sector}</span>
+                          </div>
+                          <div className="local-record-meta">
+                            <span>{formatCurrency(submission.price)}</span>
+                            <span>{formatRecordDate(submission.createdAt)}</span>
+                          </div>
+                          <div className="local-contact-row">
+                            <span><Phone size={13} /> {submission.phone}</span>
+                            <span><Mail size={13} /> {submission.email}</span>
+                          </div>
+                        </article>
+                      ))
+                    )}
+                  </div>
+                </section>
+
+                <section className="local-record-section">
+                  <div className="local-record-title">
+                    <ShieldCheck size={16} />
+                    Offres
+                  </div>
+                  <div className="local-record-list">
+                    {offers.length === 0 ? (
+                      <div className="local-record-empty">Aucune offre acheteur</div>
+                    ) : (
+                      offers.map((offer) => (
+                        <article className="local-record-card" key={offer.id}>
+                          <div>
+                            <strong>{offer.buyerName}</strong>
+                            <span>{assetNames.get(offer.assetId) ?? `Actif #${offer.assetId}`}</span>
+                          </div>
+                          <div className="local-record-meta">
+                            <span>{formatCurrency(offer.amount)}</span>
+                            <span>Acompte {formatCurrency(offer.deposit)}</span>
+                          </div>
+                          <div className="local-contact-row">
+                            {offer.buyerPhone ? <span><Phone size={13} /> {offer.buyerPhone}</span> : null}
+                            <span><Mail size={13} /> {offer.buyerEmail}</span>
+                          </div>
+                        </article>
+                      ))
+                    )}
+                  </div>
+                </section>
+              </div>
+            </div>
+          ) : null}
         </div>
       </div>
     </section>

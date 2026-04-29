@@ -1617,6 +1617,130 @@
   background: #fff;
 }
 
+.local-records-panel {
+  display: grid;
+  gap: 14px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.compact-head {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.compact-head svg {
+  color: var(--blue);
+}
+
+.local-record-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.local-record-section,
+.local-record-list,
+.local-record-card {
+  display: grid;
+  min-width: 0;
+}
+
+.local-record-section {
+  gap: 10px;
+}
+
+.local-record-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--navy);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.local-record-title svg {
+  color: var(--green);
+}
+
+.local-record-list {
+  gap: 9px;
+  max-height: 360px;
+  overflow: auto;
+  padding-right: 3px;
+}
+
+.local-record-card {
+  gap: 9px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #fff;
+}
+
+.local-record-card strong,
+.local-record-card span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.local-record-card strong {
+  color: var(--navy);
+  font-size: 14px;
+}
+
+.local-record-card > div > span {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.local-record-meta,
+.local-contact-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.local-record-meta span {
+  min-height: 27px;
+  padding: 5px 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  color: var(--navy);
+  background: var(--surface-soft);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.local-contact-row span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 100%;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.local-record-empty {
+  min-height: 86px;
+  padding: 18px 12px;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius);
+  color: var(--muted);
+  background: #fff;
+  font-size: 13px;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .local-record-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .seller-layout,
 .about-layout,
 .operations-layout {
