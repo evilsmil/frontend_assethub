@@ -1,0 +1,16 @@
+<svg width="400" height="126" viewBox="0 0 400 126" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Clean Energy Services</title>
+  <desc id="desc">Logo Clean Energy Services avec feuille verte et éclair.</desc>
+  <path d="M80.6 0C67.7 15.7 51.3 27.8 36.4 41.4C23.3 53.4 9.1 66.9 8 86.1C7.2 99.3 13.8 109.6 26.4 114.1C20.3 118.8 16.9 124.3 16.5 126C16.6 117.1 20.7 108.2 28.3 101.1C42.7 87.8 58.5 75.3 67.3 57.2C58.9 66.9 49.3 74.5 39 82C35.5 84.6 31.4 87.4 27.5 89.3C23.3 91.3 18.7 91.2 16.5 86.8C13.7 81.2 17 72.3 20.3 67.2C27.3 56.3 38 47.8 47.3 38.9C59.5 27.1 71.5 15.3 80.6 0Z" fill="url(#leafGradient)"/>
+  <path d="M52.5 25.7L33.5 68.7H49.2L34.4 103.2L71.7 54.6H54.8L66.2 25.7H52.5Z" fill="white"/>
+  <path d="M17.1 124.6C17.8 107.2 27.6 96.1 40 86.3" stroke="#159947" stroke-width="3" stroke-linecap="round"/>
+  <text x="94" y="73" fill="#050505" font-family="Arial, Helvetica, sans-serif" font-size="52" font-weight="400">Clean Energy</text>
+  <text x="97" y="108" fill="#22a447" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="300">services</text>
+  <defs>
+    <linearGradient id="leafGradient" x1="14" y1="114" x2="82" y2="9" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#159947"/>
+      <stop offset="0.48" stop-color="#43A843"/>
+      <stop offset="1" stop-color="#83AD2D"/>
+    </linearGradient>
+  </defs>
+</svg>
