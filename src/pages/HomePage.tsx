@@ -15,9 +15,33 @@ import {
 import { SectionTitle } from '../components/SectionTitle'
 import { StatBlock } from '../components/StatBlock'
 import { sectorFilters, testimonials, trustedCompanies } from '../data/marketplace'
-import cleanEnergyLogo from '../assets/clean-energy-services.svg'
+import ambassadeEtatsUnisLogo from '../assets/trusted/ambassade-etats-unis.png'
+import careInternationalLogo from '../assets/trusted/care-international.png'
+import dollarsBijouxLogo from '../assets/trusted/dollars-bijoux.png'
+import douanesCamerounaiseLogo from '../assets/trusted/douanes-camerounaise.png'
+import edfLogo from '../assets/trusted/edf.png'
+import eneoLogo from '../assets/trusted/eneo.png'
+import nrcLogo from '../assets/trusted/nrc.png'
+import pnudLogo from '../assets/trusted/pnud.png'
+import routDafLogo from '../assets/trusted/rout-daf.png'
+import takosAfricaLogo from '../assets/trusted/takos-africa.png'
+import upowaLogo from '../assets/trusted/upowa.png'
 import { compactCurrency, formatCurrency } from '../utils/currency'
 import type { Asset, SectorFilter } from '../types/marketplace'
+
+const trustedCompanyLogos: Record<string, string> = {
+  edf: edfLogo,
+  upowa: upowaLogo,
+  'rout-daf': routDafLogo,
+  nrc: nrcLogo,
+  'care-international': careInternationalLogo,
+  'takos-africa': takosAfricaLogo,
+  'dollars-bijoux': dollarsBijouxLogo,
+  eneo: eneoLogo,
+  'douanes-camerounaise': douanesCamerounaiseLogo,
+  'ambassade-etats-unis': ambassadeEtatsUnisLogo,
+  pnud: pnudLogo,
+}
 
 type HomePageProps = {
   assets: Asset[]
@@ -50,11 +74,10 @@ export function HomePage({
               <BadgeCheck size={16} />
               Première marketplace B2B d’actifs productifs au Cameroun
             </div>
-            <h1>La bourse opérationnelle des équipements professionnels.</h1>
+            <h1>La bourse des actifs
+productifs inutilisés</h1>
             <p>
-              AssetHub transforme les actifs dormants en liquidité pour les entreprises,
-              avec qualification terrain, séquestre bancaire et dossier de cession conforme
-              au droit OHADA.
+              Cédez vos équipements dormants à des PME qui en ont besoin. Transaction sécurisée par séquestre bancaire. Conforme au droit OHADA.
             </p>
             <div className="hero-actions">
               <button className="primary-action large" type="button" onClick={onSellerOpen}>
@@ -186,7 +209,7 @@ export function HomePage({
         <div className="content-wrap company-grid" aria-label="Entreprises qui nous font confiance">
           {trustedCompanies.map((company) => (
             <div className="company-tile" key={company.name} aria-label={company.name}>
-              <img src={cleanEnergyLogo} alt="" />
+              <img src={trustedCompanyLogos[company.logoKey]} alt={company.name} />
             </div>
           ))}
         </div>

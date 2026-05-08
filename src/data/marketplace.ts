@@ -193,12 +193,17 @@ export const buyerSteps: ProcessStep[] = [
 ]
 
 export const trustedCompanies = [
-  { name: 'Clean Energy Services', logoKey: 'clean-energy-services' },
-  { name: 'Coopérative Agricole Ouest' },
-  { name: 'Centre Logistique Yaoundé' },
-  { name: 'BTP Littoral Services' },
-  { name: 'Réseau PME Énergie' },
-  { name: 'Hôtellerie Pro Cameroun' },
+  { name: 'EDF', logoKey: 'edf' },
+  { name: 'UPOWA', logoKey: 'upowa' },
+  { name: "ROUT'DAF", logoKey: 'rout-daf' },
+  { name: 'NRC', logoKey: 'nrc' },
+  { name: 'CARE INTERNATIONAL', logoKey: 'care-international' },
+  { name: 'TAKOS AFRICA', logoKey: 'takos-africa' },
+  { name: 'DOLLARS BIJOUX', logoKey: 'dollars-bijoux' },
+  { name: 'ENEO', logoKey: 'eneo' },
+  { name: 'DOUANES CAMEROUNAISE', logoKey: 'douanes-camerounaise' },
+  { name: 'AMBASSADE DES ETATS UNIS', logoKey: 'ambassade-etats-unis' },
+  { name: 'PNUD', logoKey: 'pnud' },
 ]
 
 export const testimonials = [
